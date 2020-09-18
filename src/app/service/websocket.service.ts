@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { Usuario } from '../class/usuario';
 
 @Injectable({
   providedIn: 'root'
@@ -7,10 +8,11 @@ import { Socket } from 'ngx-socket-io';
 export class WebsocketService {
 
   public socketStatus = false;
+  public usuario: Usuario;
 
   constructor(private socket: Socket) {
     this.checkStatus();
-   }
+  }
 
   checkStatus(){
 
@@ -26,7 +28,8 @@ export class WebsocketService {
 
   }
 
-  emit(evento: string, payload?: any, callback?: VoidFunction ){
+  // tslint:disable-next-line: ban-types
+  emit(evento: string, payload?: any, callback?: Function ){
 
     this.socket.emit(evento, payload, callback);
 
@@ -37,4 +40,15 @@ export class WebsocketService {
     return this.socket.fromEvent( evento );
 
   }
+
+  loginWS(nombre: string){
+
+    console.log(`Configurando ${nombre}`);
+
+    this.emit('configurar-usuario', { nombre }, resp => {
+      console.log(resp);
+    });
+
+  }
+
 }
